@@ -14,7 +14,7 @@ class Program
         FamilyMember son = new FamilyMember() { Mother = mother, Father = father, Name = "Сын", gender = Gender.Male };
         FamilyMember son2 = new FamilyMember() { Father = father, Mother = mother2, Name = "Сын2", gender = Gender.Male };
         mother2.Children = new FamilyMember[] { son2 };
-
+        
 
         mother.Children = new FamilyMember[] { son };
         father.Children = new FamilyMember[] { son, son2 };
