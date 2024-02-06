@@ -1,13 +1,7 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace hw5WPF
 {
@@ -19,7 +13,7 @@ namespace hw5WPF
 		Calculator calculator;
 
 		public MainWindow()
-		{
+		{ 
 			InitializeComponent();
 			calculator = new Calculator();
 			calculator.Result += Calculator_Result;
@@ -58,9 +52,10 @@ namespace hw5WPF
 			string name = (e.Source as FrameworkElement).Name;
 
 			string data = InputText.Text;
-			int val = 0;
+			double val = 0;
+			CultureInfo culture = CultureInfo.CreateSpecificCulture("en-GB");
 
-			if (int.TryParse(data, out val))
+			if (double.TryParse(data.Replace(',', '.'), culture, out val))
             {
 				switch (name)
 				{
@@ -81,16 +76,17 @@ namespace hw5WPF
 						InputText.Text = string.Empty;
 						break;
 					default:
-						Answer.Content = "Jib,rf 404";
+						Answer.Content = "ОШибка 404";
 						InputText.Text = string.Empty;
 						break;
 
-				}
+				}  
 				
 			}
 			else
 			{
-				Answer.Content = "Введите цифру";
+				MessageBox.Show("Неверный разделитель");
+				calculator.Clear();
 				InputText.Text = string.Empty;
 			}
 
@@ -104,11 +100,15 @@ namespace hw5WPF
 			string str = InputText.Text;
             if (str.Length > 0)
             {
+				bool separatorFlag = false;
 				char last = str[str.Length - 1];
-				if (last < '0' || last > '9')
+				if ((last < '0' || last > '9')  && last != ',' && last != '.')
 				{
+
 					str = str.Remove(str.Length - 1);
 				}
+                
+				
 				InputText.Text = str;
 			}
 			
