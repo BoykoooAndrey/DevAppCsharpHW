@@ -15,42 +15,40 @@ namespace hw9
 				Rec(json, writer);
 
 			}
-            Console.WriteLine("End");
-
-
-
-			static void Rec(string json, XmlWriter writer)
+			Console.WriteLine("End");
+			
+		}
+		static void Rec(string json, XmlWriter writer)
+		{
+			using (JsonDocument jDoc = JsonDocument.Parse(json))
 			{
-				using (JsonDocument jDoc = JsonDocument.Parse(json))
-				{ 
-					foreach (JsonProperty item in jDoc.RootElement.EnumerateObject())
+				foreach (JsonProperty item in jDoc.RootElement.EnumerateObject())
+				{
+					writer.WriteStartElement(item.Name);
+					if (isRoot(item))
 					{
-						writer.WriteStartElement(item.Name);
-						if (isRoot(item))
-						{
-							Rec(item.Value.ToString(), writer);
+						Rec(item.Value.ToString(), writer);
 
-						}
-						else
-						{
-							writer.WriteValue(item.Value.ToString());
-						}
-						writer.WriteEndElement();
 					}
+					else
+					{
+						writer.WriteValue(item.Value.ToString());
+					}
+					writer.WriteEndElement();
 				}
 			}
+		}
 
 
-			static bool isRoot(JsonProperty prop)
+		static bool isRoot(JsonProperty prop)
+		{
+			if (prop.Value.ValueKind == JsonValueKind.Object)
 			{
-				if (prop.Value.ValueKind == JsonValueKind.Object)
-				{
-					return true;
-				}
-				else
-				{
-					return false;
-				}
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 	}
